@@ -1,0 +1,14 @@
+# Workspace de Octave (estado de sesión)
+octave-workspace
+
+# Archivos temporales de Octave
+*.asv
+
+# Datos generados (ajusta según tu proyecto)
+*.mat
+*.csv
+*.log
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db

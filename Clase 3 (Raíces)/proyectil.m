@@ -13,10 +13,13 @@ function proyectil(t,tol)
   mdot = 13.3e3;
   g = 9.81;
   v = 335;
+
   # Defino f(t)
   f = @(t) u*log(M0/(M0-mdot*t)) - g*t - v;
   # Defino df/dt
   df = @(t) (u*mdot)/(M0-mdot*t) - g;
+
+  # Defino el error y el contador de iteraciones
   error = abs(f(t));
   n = 0;
   while error > tol
@@ -25,10 +28,10 @@ function proyectil(t,tol)
       t = t_new;
       n = n + 1;
   end
+
   % Resultado
   fprintf("Metodo: Newton-Raphson\n");
   fprintf("Tiempo t = %.6f s\n", t);
   fprintf("Error |f(t)| = %.6e\n", error);
   fprintf("Iteraciones = %d\n", n);
-
   endfunction

@@ -1,21 +1,26 @@
 function ejercicio_124()
 #{
   La velocidad vertical de despegue v de un cohete próximo a la superficie
-  terrestre se puede aproximarmediante v(t) = u*log(M0/(M0-mdot*t)) - g*t,
+  terrestre se puede aproximarmediante
+      v(t) = u*log(M0/(M0-mdot*t)) - g*t,
   Quiero conocer el tiempo t en el cuál se alcanza la velocidad del sonido. Para
-  comstruyo una función f(t)= v(t) - v_sonido, donde f(t) tendrá una raíz cuando
-  v(t) = v_sonido y utilizo el método de Newton-Raphson para resolverlo
-  para las pruebas utilizaré un t inicial de 10s y una tolerancia de 0,000001
+  comstruyo una función:
+      f(t)= v(t) - v_sonido
+      f(t) = u * ln(M0 / (M0 - ṁ t)) - g t - v_sonido
+  En este ejercicio encuentro la raiz de esa función por el método de
+  Newton-Raphson para resolverlo  para las pruebas utilizaré un t inicial de
+  10s e iterando hasta que se cumple |f(P)| < tol, con una tolerancia de
+  1e-6.
   #}
   # Seteo los parámetros iniciales.
   u = 2510;
   M0 = 2.8e6;
   mdot = 13.3e3;
   g = 9.81;
-  v = 335;
+  v_sonido = 335;
 
   # Defino f(t)
-  f = @(t) u*log(M0/(M0-mdot*t)) - g*t - v;
+  f = @(t) u*log(M0/(M0-mdot*t)) - g*t - v_sonido;
   # Defino df/dt
   df = @(t) (u*mdot)/(M0-mdot*t) - g;
 

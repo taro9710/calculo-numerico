@@ -1,0 +1,49 @@
+  
+  # Parámetros de la primera recta.
+  a = 8e6;
+  b = 100e6;
+  fa = f(a)
+  fb = f(b)
+  # Verificación para que funcione el critero.
+  if fa*fb > 0
+      error("No hay cambio de signo, no puedo asegurar que haya una raiz.");
+  endif    
+
+
+while err > tol
+      c = b - fb * (b-a) / (fb - fa);
+      fc = f(c);
+      err = abs(fc);
+      if fa*fc == 0
+        break;
+      elseif fa*fc < 0
+        b  = c;
+        fb = f(b);
+      else
+        a = c;
+        fa = f(a);
+      endif
+      n = n + 1;
+  endwhile
+  # Resultado final
+  fprintf("Metodo: Regula Falsi\n");
+
+
+
+  #{
+  while err > tol
+      c = (a + b)/2;
+      fc = f(c);
+      err = abs(fc);
+      if fa*fc < 0
+          b = c;
+          fb = fc;
+      else
+          a = c;
+          fa = fc;
+      endif
+      n = n + 1;
+  endwhile
+  #}
+  # Resultado final
+  fprintf("Metodo: Bisección\n");

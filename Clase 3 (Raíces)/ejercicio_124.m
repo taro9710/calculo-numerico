@@ -1,4 +1,4 @@
-function proyectil(t,tol)
+function ejercicio_124()
 #{
   La velocidad vertical de despegue v de un cohete próximo a la superficie
   terrestre se puede aproximarmediante v(t) = u*log(M0/(M0-mdot*t)) - g*t,
@@ -19,7 +19,10 @@ function proyectil(t,tol)
   # Defino df/dt
   df = @(t) (u*mdot)/(M0-mdot*t) - g;
 
-  # Defino el error y el contador de iteraciones
+  # Defino el valor de t con el que comienzo, la tolerancia, el error y el
+  # contador de iteraciones
+  t = 10;
+  tol = 1e-6;
   error = abs(f(t));
   n = 0;
   while error > tol
@@ -29,9 +32,9 @@ function proyectil(t,tol)
       n = n + 1;
   end
 
-  % Resultado
+  #Resultado
   fprintf("Metodo: Newton-Raphson\n");
   fprintf("Tiempo t = %.6f s\n", t);
   fprintf("Error |f(t)| = %.6e\n", error);
   fprintf("Iteraciones = %d\n", n);
-  endfunction
+endfunction

@@ -57,7 +57,6 @@ function ejercicio_122()
   endwhile
   # Resultado final
   fprintf("Metodo: Regula Falsi\n");
-  fprintf("Metodo: Bisección\n");
   fprintf("Carga P = %.6f N\n", c);
   fprintf("Error = %.6e\n", err);
   fprintf("Iteraciones = %d\n", n);

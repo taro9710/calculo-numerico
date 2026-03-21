@@ -8,6 +8,8 @@ octave-workspace
 *.mat
 *.csv
 *.log
+*.png
+*.jpg
 
 # Archivos de sistema
 .DS_Store

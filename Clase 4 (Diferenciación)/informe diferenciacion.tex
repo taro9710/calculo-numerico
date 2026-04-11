@@ -1,0 +1,286 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{float}
+\usepackage{listings}
+\usepackage{amsmath}
+
+% Me sirve para los \cref
+\usepackage[noabbrev,spanish]{cleveref}
+
+%Traducciones de cref
+\crefname{equation}{ec.}{ecuaciones}
+\Crefname{equation}{Ecuación}{Ecuaciones}
+\crefname{figure}{figura}{figuras}
+\Crefname{figure}{Figura}{Figuras}
+\crefname{table}{tabla}{tablas}
+\Crefname{table}{Tabla}{Tablas}
+\crefname{section}{sección}{secciones}
+\Crefname{section}{Sección}{Secciones}
+
+\title{TAREA ECN - Diferenciación Numérica}
+\author{Lautaro Heredia, Sofía Vargas, Maximiliano Jesus Vanrell}
+\date{30 de marzo del 2026}
+
+\begin{document}
+	
+	\maketitle 
+	\section{Introducción}
+	El movimiento de un cuerpo en caída libre bajo la influencia de la resistencia del aire se modela mediante una ecuación diferencial que equilibra el peso y la fuerza de arrastre. La solución analítica para la posición $y(t)$ es: 
+	$$y(t) = \frac{m}{c} \ln\left(\cosh\left(k \cdot t\right)\right)$$
+	La constante auxiliar $k$ se define como:
+	$$k = \sqrt{\frac{c \cdot g}{m}}$$
+	Donde:
+	\begin{itemize}
+		\item Masa ($m$): $0,3$ kg.
+		\item Coeficiente de arrastre ($c$): $0,5$ kg/m.
+		\item Gravedad ($g$): $9,81$ m/s$^2$.
+	\end{itemize}
+	\section{Desarrollo del Ejercicio}
+	1. Esquemas de Derivación Numérica (Orden 2): Para obtener la velocidad $v(t) = y'(t)$, se utilizan esquemas de diferencias finitas de segundo orden $O(\Delta t^2)$ para evitar la pérdida de precisión en los extremos:
+	\begin{itemize}
+		\item Diferencia Progresiva (Inicio, $t=0$):$$v_0 \approx \frac{-3y_0 + 4y_1 - y_2}{2\Delta t}$$
+		\item Diferencia Centrada (Puntos intermedios):$$v_i \approx \frac{y_{i+1} - y_{i-1}}{2\Delta t}$$
+		\item Diferencia Regresiva (Final, $t=1$):$$v_n \approx \frac{3y_n - 4y_{n-1} + y_{n-2}}{2\Delta t}$$
+	\end{itemize}
+	2. Extrapolación de Richardson $O(\Delta t^4)$:
+	Este método combina dos aproximaciones de orden inferior calculadas con distintos pasos de tiempo ($\Delta t_{1} = 0,2$ y $\Delta t_{2} = 0,1$) para cancelar el término de error principal:
+	
+	$$v_{Rich} = \frac{4 \cdot v(\Delta t_{2}) - v(\Delta t_{1})}{3}$$
+	
+	Esta combinación lineal aumenta la precisión del resultado a un orden de error de cuarta potencia.
+	
+	
+	3. Cálculo de la Aceleración : La aceleración $a(t) = y''(t)$ se determina mediante el esquema de diferencia centrada para la segunda derivada:
+	
+	$$a_i \approx \frac{y_{i+1} - 2y_i + y_{i-1}}{\Delta t^2}$$
+	
+	4. Derivada Centrada de Orden Superior: Para el cálculo puntual en $t=0.6$ s, se emplea una fórmula de derivación de alta precisión basada en un stencil de cinco puntos. Esta expresión matemática permite obtener una aproximación con un error de truncamiento de cuarto orden:
+	
+	\begin{equation}
+		v'(t) \approx \frac{-y(t+2h) + 8y(t+h) - 8y(t-h) + y(t-2h)}{12h}
+	\end{equation}
+	
+	Esta formulación cancela los términos de error de las series de Taylor hasta el tercer orden, lo que resulta en una convergencia mucho más acelerada. 
+	
+	\section{Código}
+	\subsection{Preparativos}
+	Para resolver estos ejercicios siempre se utiliza la misma función para determinar las posiciones. Por lo que extraeremos esa función en el archivo posiciones.m.
+	
+	\begin{lstlisting}[language=Matlab]
+		function y = posicion(t)
+		%% Caida vertical
+		%% Constantes
+		m = 0.3;   % kg
+		c = 0.5;   % kg/m
+		g = 9.81;  % m/s^2
+		k = sqrt(c*g/m); % constante auxiliar
+		y = (m/c)*log(cosh(k*t)); % posicion
+		endfunction
+	\end{lstlisting}
+	Para determinar la velocidad con un error de magnitud $O(h^2)$ en los Puntos 1 y 2 utilizamos el mismo método por lo que definiremos un
+	a función que que devuelve la velocidad para  un $\Delta t$ determinado.
+	
+	\begin{lstlisting}[language=Matlab]
+		function v = velocidad(dt)
+		%velocidad esquema orden 2
+		t = 0:dt:1;% vector de tiempo
+		n = length(t); %puntos
+		v = zeros(1,n);%inicio vector de velocidades
+		y = posicion(t);
+		% Diferencia progresiva en el primer punto porque no hay puntos anteriores
+		v(1) = (-3*y(1) + 4*y(2) - y(3)) / (2*dt);
+		% Diferencias centradas en los puntos intermedios
+		for i = 2:n-1
+		v(i) = (y(i+1) - y(i-1)) / (2*dt);
+		endfor
+		% Diferencia regresiva en el ultimo punto
+		v(n) = (3*y(n) - 4*y(n-1) + y(n-2)) / (2*dt);
+		endfunction
+	\end{lstlisting}
+	
+	\subsection{Punto 1} 
+	Utilizando la definición anterior determinamos los valores de la velocidad con un $\Delta t_{1} = 0,2\text{s}$ como sigue
+	\begin{lstlisting}[language=Matlab]
+		function v = diferenciacion_1()
+		%% Caida vertical: velocidad esquema orden 2
+		%% paso de tiempo: dt = 0.2
+		%Mostramos los resultados
+		disp('Velocidades aproximadas para dt = 0.2');
+		v = velocidad(.2);
+		endfunction
+	\end{lstlisting}
+	
+	\subsection{Punto 2}
+	Repetimos el procedimiento determinando los valores de la velocidad con un $\Delta t_{2} = 0,1\text{s}$ como sigue
+	\begin{lstlisting}[language=Matlab]
+		function v = diferenciacion_2()
+		%% Caida vertical: velocidad esquema orden 2
+		%% paso de tiempo: dt = 0.1
+		%Mostramos los resultados
+		disp('Velocidades aproximadas para dt = 0.1');
+		v = velocidad(.1);
+		endfunction
+	\end{lstlisting}
+	
+	\subsection{Punto 3}
+	Utilizamos el método de Richardson para mejorar la aproximación.
+	\begin{lstlisting}[language=Matlab]
+		function v_Rich = diferenciacion_3()
+		%Punto 3, extrapolacion de Richardson, usamos los datos anteriores
+		%% Velocidades (de los puntos 1 y 2)
+		v_dt1 = velocidad(.2);  % dt=0.2
+		v_dt2 = velocidad(.1); % dt=0.1
+		
+		%% Tomamos los puntos de dt2 que coinciden con dt1
+		v_dt2_coinc = v_dt2([1:2:11]);%t = 0,0.2,0.4,0.6,0.8,1]
+		
+		%% Extrapolacion de Richardson
+		v_Rich = (4*v_dt2_coinc - v_dt1)/3;
+		
+		disp('Velocidades mejoradas con Richardson (O(dt^4))')
+		disp(v_Rich)
+		endfunction
+	\end{lstlisting}
+	\subsection{Punto 4}
+	Realizamos los tres gráficos
+	\begin{lstlisting}[language=Matlab]
+		function diferenciacion_4()
+		%% Tiempos
+		t_dt1 = 0:0.2:1;  % dt = 0.2
+		t_dt2 = 0:0.1:1;   % dt = 0.1
+		t_Rich = t_dt1;    % Richardson coincide con dt1
+		v_dt1 = velocidad(.2);
+		v_dt2 = velocidad(.1);
+		v_Rich = diferenciacion_3();
+		%% Graficar usando subplot
+		figure;
+		%Grafica 1
+		subplot(3,1,1)
+		plot(t_dt1, v_dt1, '-o', 'LineWidth', 2)
+		title('Velocidad dt = 0.2')
+		xlabel('Tiempo (s)')
+		ylabel('Velocidad (m/s)')
+		grid on
+		%Grafica 2
+		subplot(3,1,2)
+		plot(t_dt2, v_dt2, '-o', 'LineWidth', 2)
+		title('Velocidad dt = 0.1')
+		xlabel('Tiempo (s)')
+		ylabel('Velocidad (m/s)')
+		grid on
+		%Grafica 3
+		subplot(3,1,3)
+		plot(t_Rich, v_Rich, '-o', 'LineWidth', 2)
+		title('Velocidad con Richardson (O(dt^4))')
+		xlabel('Tiempo (s)')
+		ylabel('Velocidad (m/s)')
+		grid on
+		endfunction
+	\end{lstlisting}
+	\subsection{Punto 5}
+	Se calcula la aceleración $a(t)$ como la segunda derivada de la posición mediante  diferencias centradas de segundo orden. Al observar los resultados cuando $t$ se aproxima a 1 s, se nota una disminución en el valor de la aceleración.
+	\begin{lstlisting}
+		function diferenciacion_5()
+		%% Punto 5: Aceleracion dt = 0.1
+		%% Paso de tiempo
+		dt = 0.1;
+		t = 0:dt:1;
+		y = posicion(t);
+		n = length(t);
+		a = zeros(1,n);
+		% Primer punto (progresiva)
+		a(1) = (y(3) - 2*y(2) + y(1)) / dt^2;
+		% Puntos intermedios (centrada)
+		for i = 2:n-1
+		a(i) = (y(i+1) - 2*y(i) + y(i-1)) / dt^2;
+		end
+		% Ultimo punto (regresiva)
+		a(n) = (y(n) - 2*y(n-1) + y(n-2)) / dt^2;
+		
+		disp('Aceleraciones aproximadas dt=0.1:');
+		disp(a);
+		endfunction
+	\end{lstlisting}
+	\subsection{Punto 6}
+	Para validar la precisión de los métodos, se comparan dos aproximaciones de orden $O(\Delta t^4)$ en el instante $t = 0.6$ s. Se utiliza una fórmula de derivación centrada y el valor obtenido mediante la Extrapolación de Richardson.
+	\begin{lstlisting}
+		function diferenciacion_6()
+		%% Punto 6: Derivada centrada O(dt^4) en t = 0.6
+		%% Paso de tiempo
+		dt = 0.1;
+		t = 0:dt:1;
+		y = posicion(t);
+		v_Rich = diferenciacion_3();
+		%% Indice correspondiente a t = 0.6
+		i = find(abs(t-0.6) < 1e-10);  % i = 7
+		%% Derivada centrada O(dt^4)
+		v_O4 = (-y(i+2) + 8*y(i+1) - 8*y(i-1) + y(i-2)) / (12*dt);
+		disp(['Velocidad en t=0.6 con derivada centrada O(dt^4): ', num2str(v_O4)])
+		% v_Rich corresponde a t = [0 0.2 0.4 0.6 0.8 1]
+		% Interpolamos para t = 0.6
+		disp(['Velocidad en t=0.6 con Richardson: ', num2str(v_Rich(4))])
+		endfunction
+	\end{lstlisting}
+	
+	\section{Resultados}
+	\subsection{Resultados Punto 1}
+	En la \Cref{fig:1} se presentan los resultados para el Punto 1.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{1.jpg}
+		\caption{Resultados Punto 1.} 
+		\label{fig:1}
+	\end{figure}
+	
+	\subsection{Resultados Punto 2}
+	En la \Cref{fig:2} se presentan los resultados para el Punto 2.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{2.jpg}
+		\caption{Resultados Punto 2.} 
+		\label{fig:2}
+	\end{figure}
+	
+	\subsection{Resultados Punto 3}
+	En la \Cref{fig:3} se presentan los resultados para el Punto 3.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{3.jpg}
+		\caption{Resultados Punto 3.} 
+		\label{fig:3}
+	\end{figure}
+	
+	\subsection{Resultados Punto 4}
+	En la \Cref{fig:4} se presentan los resultados para el Punto 4.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{4.jpg}
+		\caption{Resultados Punto 4.} 
+		\label{fig:4}
+	\end{figure}
+	
+	
+	\subsection{Resultados Punto 5}
+	En la \Cref{fig:5} se presentan los resultados para el Punto 5.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{5.jpg}
+		\caption{Resultados Punto 5.} 
+		\label{fig:5}
+	\end{figure}
+	
+	\subsection{Resultados Punto 6}
+	En la \Cref{fig:6} se presentan los resultados para el Punto 6.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{6.jpg}
+		\caption{Resultados Punto 6.} 
+		\label{fig:6}
+	\end{figure}
+	\section{Conclusiones}
+	En las graficas se ve como al reducir el dt de 0.2 a 0.1 se obtienen resultados más precisos y al utilizar el metodo de Richardson se reduce más el error, además vemos en los gráficos como la velocidad tiende a 2,5 $\frac{m}{s}$ a medida que t tiende a $1s$, esto ocurre por el término $c$ que es la resistencia al aire haciendo que al aumentar la velocidad la fuerza de resistencia aumente llegando a una velocidad terminal. Y que por lo tanto su aceleración tienda a cero.
+	
+	
+	Además dado que ambos métodos (Richardson y la derivada centrada de orden 4) poseen el mismo orden de precisión $O(\Delta t^4)$, los resultados obtenidos en $t=0.6$ s presentan una coincidencia casi total. Esto confirma la consistencia numérica del modelo y demuestra que la combinación lineal de dos mallas de orden inferior (Richardson) es matemáticamente equivalente a la aplicación de un esquema de orden superior sobre una malla única. 
+	
+\end{document}

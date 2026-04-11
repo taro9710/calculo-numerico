@@ -14,7 +14,7 @@ function ECN_TP_EDO_CI()
   estado0 = [x0; y0; z0];
 
   t0 = 0;
-  tf    = 50;
+  tf = 50;
   #definición del sistema de EDOs
   # f(t, estado) devuelve las derivadas [dx/dt; dy/dt; dz/dt]
   #   dx/dt = -S*x + S*y
@@ -79,12 +79,17 @@ function ECN_TP_EDO_CI()
     resultados_es = [resultados_es,es_end];
     resultados_em = [resultados_em,em_end];
 
-
     #Grafico
     graficadora(es,h,"Euler",i,"r",1)
     graficadora(em,h,"Euler Mejorado",i,"b",2)
   endfor
 
+  resultados_euler_simple_h02 = resultados_es(:,1)
+  resultados_euler_simple_h01 = resultados_es(:,2)
+  resultados_euler_simple_h005 = resultados_es(:,3)
+  resultados_euler_mejorado_h02 = resultados_em(:,1)
+  resultados_euler_mejorado_h01 = resultados_em(:,2)
+  resultados_euler_mejorado_h005 = resultados_em(:,3)
 
   #ERROR RELATIVO
   #error_relativo = |u_aprox - u_ref| / |u_ref|
@@ -100,6 +105,10 @@ function ECN_TP_EDO_CI()
     error_em = norm(resultados_em(:,i)-referencia) / norm(referencia);
     errores_em = [errores_em,error_em];
   endfor
-  errores_em
-  errores_es
+  errores_euler_simple_h02 = errores_es(:,1)
+  errores_euler_simple_h01 = errores_es(:,2)
+  errores_euler_simple_h005 = errores_es(:,3)
+  errores_euler_mejorado_h02 = errores_em(:,1)
+  errores_euler_mejorado_h01 = errores_em(:,2)
+  errores_euler_mejorado_h005 = errores_em(:,3)
 endfunction

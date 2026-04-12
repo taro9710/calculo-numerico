@@ -80,8 +80,8 @@ function ECN_TP_EDO_CI()
     resultados_em = [resultados_em,em_end];
 
     #Grafico
-    graficadora(es,h,"Euler",i,"r",1)
-    graficadora(em,h,"Euler Mejorado",i,"b",2)
+    #graficadora(es,h,"Euler",i,"r",1)
+    #graficadora(em,h,"Euler Mejorado",i,"b",2)
   endfor
 
   resultados_euler_simple_h02 = resultados_es(:,1)

@@ -10,6 +10,7 @@ octave-workspace
 *.log
 *.png
 *.jpg
+*.pdf
 
 # Archivos de sistema
 .DS_Store

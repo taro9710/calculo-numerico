@@ -11,12 +11,12 @@ function rk4(f,t,dt,n,Z)
 	endfor
 	% Graficas
 	figure;
-	plot(Z(1,:));
-	title('x vs t (RK4)');
-	xlabel('x'); ylabel('t');
+	plot(t,Z(1,:));
+	title('t vs x (RK4)');
+	xlabel('t'); ylabel('x');
 
 	figure;
 	plot(Z(1,:), Z(2,:));
-	title('Plano fase (RK4)');
+	title('x vs v (RK4)');
 	xlabel('x'); ylabel('v');
 endfunction

@@ -15,6 +15,8 @@ function ecn_tp_edo_orden_superior()
 	Z(1,1) = 2; % X(t = 0) = 2m
 	Z(2,1) = 0; % X'(t = 0)= 0 m/s^2
 	
+	% Rungekutta de orden 2
+	rk2(f,t,dt,n,Z);
 	% Rungekutta de orden 4
 	rk4(f,t,dt,n,Z);
 endfunction

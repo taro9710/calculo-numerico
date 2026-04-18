@@ -17,6 +17,8 @@ function ecn_tp_edo_orden_superior()
 	
 	% Rungekutta de orden 2
 	rk2(f,t,dt,n,Z);
+	% Diferencias finitias centradas
+	dif_finitas_centradas(k,m,t,dt,n,Z);
 	% Rungekutta de orden 4
 	rk4(f,t,dt,n,Z);
 endfunction

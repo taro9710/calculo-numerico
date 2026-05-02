@@ -30,4 +30,4 @@ function equilibrio_estatico()
   for i = 1:5
       disp(['u_',num2str(i),': ',num2str(x(i))]);
   end
-  end
+end

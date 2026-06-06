@@ -1,10 +1,15 @@
 # Workspace de Octave (estado de sesión)
 octave-workspace
 
-# Archivos temporales de Octave
+# Archivos temporales e historiales de Octave
 *.asv
+.octave_hist
 
-# Datos generados (ajusta según tu proyecto)
+# Archivos binarios y de compilación (si usas funciones en C/C++ con MEX)
+*.mex*
+*.oct
+
+# Datos generados y reportes (ajusta según tu proyecto)
 *.mat
 *.csv
 *.log
@@ -15,3 +20,8 @@ octave-workspace
 # Archivos de sistema
 .DS_Store
 Thumbs.db
+# Temporales de Neovim
+*.swp
+*.swo
+*~
+.netrwhist

@@ -21,4 +21,5 @@ function P = lagrange(xeval,x,y)
   		end
 	end
 	P = y'*L;
+	display(round(P * 1e4)/1e4);
 end

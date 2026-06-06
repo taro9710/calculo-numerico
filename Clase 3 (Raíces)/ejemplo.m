@@ -1,7 +1,7 @@
 function ejemplo()
-  g = 9.81; #m/s^2
-  c = 12.5; #Kg/s
-  t = 6; #s
+  g = 9.81; %m/s^2
+  c = 12.5; %Kg/s
+  t = 6; %s
   tol = 5e-4;
   f = @(m) (g.*m./c).*(1 - exp(-(c./m).*t)) - 35;
   err = inf;

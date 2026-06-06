@@ -1,5 +1,5 @@
 function ejercicio_123()
-  #{
+  %{
   En una acequia de ancho constante b con un obstáculo de altura H, en condición
   subcrı́tica, el caudal Q y el tirante h se relacionan mediante la ecuación de
   Bernoulli.
@@ -17,26 +17,26 @@ function ejercicio_123()
   Es importante notar que la función presenta una singularidad en h = 0,
   por lo que el intervalo inicial debe elegirse evitando valores cercanos
   a cero.
-#}
-  # Parámetros
+%}
+  % Parámetros
   Q = 1.2;
   g = 9.81;
   b_canal = 1.8;
   h0 = 0.6;
   H = 0.075;
 
-  # Función
+  % Función
   f = @(h) (Q^2)/(2*g*b_canal^2*h0^2) + h0 - ( (Q^2)./(2*g*b_canal^2*h.^2) + h + H );
-  # Parámetros de la primera recta.
+  % Parámetros de la primera recta.
   a = 0.1;
   b = 0.3;
   fa = f(a)
   fb = f(b)
-  # Verificación para que funcione el critero.
+  % Verificación para que funcione el critero.
   if fa*fb > 0
       error("No hay cambio de signo, no puedo asegurar que haya una raiz.");
-  endif
-  # Defino el error, la tolerancia y el contador de iteraciones
+  end
+  % Defino el error, la tolerancia y el contador de iteraciones
   tol = 1e-6;
   err = Inf;
   n = 0;
@@ -52,12 +52,12 @@ function ejercicio_123()
       else
         a = c;
         fa = f(a);
-      endif
+      end
       n = n + 1;
-  endwhile
-  # Resultado final
+  end
+  % Resultado final
   fprintf("Metodo: Regula Falsi\n");
   fprintf("h = %.6f m\n", c);
   fprintf("Error = %.6e\n", err);
   fprintf("Iteraciones = %d\n", n);
-endfunction
+end

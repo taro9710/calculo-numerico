@@ -1,5 +1,5 @@
 function ejercicio_121()
-  #{
+  %{
   Sea un cable de longitud s extendido entre dos extremos separados a una
   distancia L. La longitud s y la deflexión transversal h se pueden describir
   mediante las siguientes ecuaciones donde λ es la relación entre la densidad
@@ -18,23 +18,23 @@ function ejercicio_121()
 
   Una vez obtenido λ, se calcula la longitud del cable mediante:
       s = (2/λ)*sinh(λL/2)
-  #}
-  # Seteo los parámetros del problema
+	  %}
+  % Seteo los parámetros del problema
   L = 160;
   h = 15;
-  # Seteo la función f(lambda) = h(lambda) - 15m
+  % Seteo la función f(lambda) = h(lambda) - 15m
   f = @(lambda) (1./lambda).*(cosh(lambda*L/2) - 1) - h;
-  # seteo los parámetros iniciales
+  % seteo los parámetros iniciales
   a = 0.001;
   b = 0.02;
   fa = f(a);
   fb = f(b);
   tol = 1e-6;
-  # Verificación
+  % Verificación
   if fa*fb > 0
       error("No hay cambio de signo, no se cumple el crnio del Teorema de Bolzano");
-  endif
-# Defino el error y el contador de iteraciones
+  end
+% Defino el error y el contador de iteraciones
   err = Inf;
   n = 0;
 
@@ -48,16 +48,16 @@ function ejercicio_121()
     else
         a = c;
         fa = fc;
-    endif
+    end
     n = n + 1;
-  endwhile
+  end
   c = (a + b)/2;
-  #Calcular s
+  %Calcular s
   s = (2/c)*sinh(c*L/2);
-  # Resultado final
+  % Resultado final
   fprintf("Metodo: Bisección\n");
   fprintf("lambda = %.6f\n", c);
   fprintf("Longitud s = %.6f m\n", s);
   fprintf("Error = %.6e\n", err);
   fprintf("Iteraciones = %d\n", n);
-endfunction
+end

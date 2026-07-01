@@ -3,8 +3,8 @@ function [x,iter] =  ejemplo_gauss_seidel()
 	err = inf;
 	iter = 0;
 
-	A = [4 -1 1; 4 -8 1; -2 1 5];
-	b = [7; -21; 15];
+	A = [-2 1 0; 1 -2 1; 0 1 -2]
+	b = [-150; -50; -250];
 
 	[m,n] = size(A);
 
